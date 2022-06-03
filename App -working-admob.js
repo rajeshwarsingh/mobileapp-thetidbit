@@ -9,7 +9,7 @@ import { Provider as PaperProvider } from 'react-native-paper';
 import PreferenceComponent from './src/components/PreferenceComponent'
 import AsyncStorage from '@react-native-async-storage/async-storage';
 // import mobileAds, { MaxAdContentRating } from 'react-native-google-mobile-ads';
-// import { AppOpenAd, InterstitialAd, RewardedAd, BannerAd, TestIds, BannerAdSize } from 'react-native-google-mobile-ads';
+import { AppOpenAd, InterstitialAd, RewardedAd, BannerAd, TestIds, BannerAdSize } from 'react-native-google-mobile-ads';
 import {
   AdMobBanner,
   AdMobInterstitial,
@@ -26,6 +26,9 @@ Notifications.setNotificationHandler({
     shouldSetBadge: false,
   }),
 });
+
+
+
 
 export default function App() {
   const [expoPushToken, setExpoPushToken] = useState('');
@@ -90,8 +93,6 @@ export default function App() {
 
   useEffect(async()=>{
     await setTestDeviceIDAsync('EMULATOR');
-  },[])
-  // useEffect(()=>{
   //   mobileAds()
   // .setRequestConfiguration({
   //   // Update all future requests suitable for parental guidance
@@ -111,7 +112,7 @@ export default function App() {
   //   // Request config successfully set!
     
   // });
-  // },[])
+  },[])
 
   // const callPreferenceHandle = async () => {
 
@@ -220,12 +221,7 @@ export default function App() {
 
   return (
     <PaperProvider>
-      <AdMobBanner
-  bannerSize="fullBanner"
-  adUnitID="ca-app-pub-9155008277126927/7669993848" // Test ID, Replace with your-admob-unit-id
-  servePersonalizedAds // true or false
-  onDidFailToReceiveAdWithError={this.bannerError} />
-
+      
       {showPreference && <PreferenceComponent setPreference={setPreferenceComponentCall} />}
       {!showPreference && <>
         {refComponent && <WebView
@@ -239,6 +235,11 @@ export default function App() {
         />}
       </>}
       {/* <BannerAd size={BannerAdSize.BANNER} unitId={TestIds.BANNER} /> */}
+      <AdMobBanner
+  bannerSize="fullBanner"
+  adUnitID="ca-app-pub-9155008277126927/7669993848" // Test ID, Replace with your-admob-unit-id
+  servePersonalizedAds // true or false
+  onDidFailToReceiveAdWithError={this.bannerError} />
     </PaperProvider>
   );
 }
