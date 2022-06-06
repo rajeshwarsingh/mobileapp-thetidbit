@@ -29,3 +29,14 @@ expo start
 https://docs.expo.dev/push-notifications/sending-notifications-custom/
 
 https://medium.com/successivetech/firebase-push-notification-in-react-native-57973ee7c11d
+
+
+
+------------------------------------------------------
+## Linking
+
+https://docs.expo.dev/guides/linking/#handling-links-into-your-app
+
+How to implement deep linking in React Native with React Navigation v5 in 2021
+
+https://www.youtube.com/watch?v=s8YaclRknYw
