@@ -19,6 +19,9 @@ eas build:configure
 eas build --platform android
 
 
+## create apk command
+
+expo build:android -t apk
 
 
 ---------------------------------------------------
@@ -40,3 +43,4 @@ https://docs.expo.dev/guides/linking/#handling-links-into-your-app
 How to implement deep linking in React Native with React Navigation v5 in 2021
 
 https://www.youtube.com/watch?v=s8YaclRknYw
+

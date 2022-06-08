@@ -7,7 +7,7 @@ import { Appbar, Menu } from 'react-native-paper';
 import { WebView } from 'react-native-webview'
 import NewsSLider from './NewsSlider'
 import Browser from './Browser';
-
+import { useSelector } from 'react-redux'
 const Stack = createStackNavigator();
 
 function CustomNavigationBar({ navigation, back }) {
@@ -24,6 +24,8 @@ function CustomNavigationBar({ navigation, back }) {
 }
 
 export default function App() {
+  const counter = useSelector((state) => state.news)
+  console.log("counter1:",counter)
   return (
     <NavigationContainer>
       <Stack.Navigator

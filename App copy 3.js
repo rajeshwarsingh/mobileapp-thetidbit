@@ -1,14 +1,12 @@
 import Constants from 'expo-constants';
 import * as Notifications from 'expo-notifications';
 import * as React from 'react';
-import { Text } from 'react-native'
+import {Text} from 'react-native'
 import { DefaultTheme, Provider as PaperProvider } from 'react-native-paper';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as Linking from 'expo-linking';
 import * as WebBrowser from 'expo-web-browser';
 import App from './src/App';
-import store from './src/store/reducer'
-
 
 import {
   AdMobBanner,
@@ -18,13 +16,9 @@ import {
   setTestDeviceIDAsync,
 } from 'expo-ads-admob';
 
-// --------------redux---------------
-import { Provider, connect } from 'react-redux';
-
-
-// -----------------------------
-
 import { setAndroidToken, getAndroidToken } from './src/api';
+import { createStackNavigator } from '@react-navigation/stack';
+import { NavigationContainer } from '@react-navigation/native';
 
 Notifications.setNotificationHandler({
   handleNotification: async () => ({
@@ -43,6 +37,17 @@ const theme = {
   },
 };
 
+function Home(){
+  return <Text>home screen</Text>
+}
+
+function Settings(){
+  return <Text>Settings</Text>
+}
+
+const prefix = Linking.makeUrl('/')
+const Stack = createStackNavigator();
+
 export default function Main() {
 
   const [expoPushToken, setExpoPushToken] = React.useState('');
@@ -52,9 +57,19 @@ export default function Main() {
   const [showPreference, setShowPreference] = React.useState(false);
   const [langState, setLangState] = React.useState('');
   const [categoryState, setCategoryState] = React.useState('');
-  const [data, setData] = React.useState(null);
   const notificationListener = React.useRef();
   const responseListener = React.useRef();
+  const [data, setData] = React.useState(null);
+
+  const linking ={
+    prefixes:[prefix],
+    config:{
+      screen:{
+        Home:'home',
+        Settings:'settings'
+      }
+    }
+  }
 
   React.useEffect(() => {
     registerForPushNotificationsAsync().then(token => setExpoPushToken(token));
@@ -76,41 +91,46 @@ export default function Main() {
   React.useEffect(async () => {
     await setTestDeviceIDAsync('EMULATOR');
   }, [])
-  const handleDeepLink = (e) => {
+  const handleDeepLink = (e)=>{
+    console.log("e*******",e)
     let data = Linking.parse(e.url)
     console.log("data :", data)
   }
-  React.useEffect(() => {
-    async function getInitialUrl() {
+  React.useEffect(()=>{
+    console.log('useEffect URL:')
+    async function getInitialUrl(){
       console.log('initial URL:')
-      const initialURL = await Linking.getInitialURL();
-      if (initialURL) setData(Linking.parse(initialURL))
+      const initialURL= await Linking.getInitialURL();
+      if(initialURL)setData(Linking.parse(initialURL))
     }
 
-    Linking.addEventListener('url', handleDeepLink)
-    if (!data) {
+    Linking.addEventListener('url',handleDeepLink)
+    if(!data){
       getInitialUrl();
     }
 
-    return () => Linking.removeEventListener('url');
+    return ()=>Linking.removeEventListener('url');
+    
+  },[])
 
-  }, [])
-  
   return (
-    <PaperProvider theme={theme}>
-      <AdMobBanner
-        bannerSize="fullBanner"
-        adUnitID="ca-app-pub-9155008277126927/7669993848" // prod
-        // adUnitID="ca-app-pub-3940256099942544/6300978111" // Test ID
-        servePersonalizedAds // true or false
-        onDidFailToReceiveAdWithError={this.bannerError} />
-
-      <Text>{data ? JSON.stringify(data) : 'app not open'}</Text>
-      <Provider store={store}>
-        <App source={data} />
-      </Provider>
-
-    </PaperProvider>
+    <NavigationContainer Linking>
+      <Stack.Navigator>
+        <Stack.Screen name="home" component={Home}/>
+        <Stack.Screen name="settings" component={Settings}/>
+      </Stack.Navigator>
+    </NavigationContainer>
+    // <PaperProvider theme={theme}>
+    //   {/* <AdMobBanner
+    //     bannerSize="fullBanner"
+    //     // adUnitID="ca-app-pub-9155008277126927/7669993848" // prod
+    //     adUnitID="ca-app-pub-3940256099942544/6300978111" // Test ID
+    //     servePersonalizedAds // true or false
+    //     onDidFailToReceiveAdWithError={this.bannerError} /> */}
+       
+    //   <App />
+    //   <Text>{data?JSON.stringify(data):'app not open'}</Text>
+    // </PaperProvider>
   );
 }
 

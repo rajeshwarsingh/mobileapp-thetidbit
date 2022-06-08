@@ -47,14 +47,14 @@ export default function SwiperComponent({ news = [] }) {
 
   return (
     <View style={{ flex: 1 }}>
-      <Swiper
+      {news.length >0 &&<Swiper
         style={styles.wrapper}
         onIndexChanged={inx => setIndexChanged(inx)}
         showsPagination={false}
         horizontal={false}
         loop={false}>
         {newsSlid}
-      </Swiper>
+      </Swiper>}
     </View>
   )
 

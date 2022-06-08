@@ -5,9 +5,10 @@
     "ios_app_id": "ca-app-pub-xxxxxxxx~xxxxxxxx"
   },
   "expo": {
+    "scheme": "thetidbit",
     "name": "thetidbit",
     "slug": "mobileapp-thetidbit",
-    "version": "3.0.20",
+    "version": "3.0.21",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "plugins": [
@@ -48,8 +49,16 @@
           "data": [
             {
               "scheme": "https",
-              "host": "*.myapp.io",
-              "pathPrefix": "/records"
+              "host": "blogs.thetidbit.in",
+              "pathPrefix": "/"
+            },
+            {
+              "scheme": "https",
+              "host": "thetidbit.in",
+              "pathPrefix": "/"
+            },
+            {
+              "scheme": "thetidbit"
             }
           ],
           "category": [
@@ -58,7 +67,7 @@
           ]
         }
       ],
-      "versionCode": 23,
+      "versionCode": 24,
       "googleServicesFile": "./google-services.json",
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",

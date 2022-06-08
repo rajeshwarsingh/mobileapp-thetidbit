@@ -1,15 +1,11 @@
 import Constants from 'expo-constants';
 import * as Notifications from 'expo-notifications';
 import * as React from 'react';
-import { Text } from 'react-native'
 import { DefaultTheme, Provider as PaperProvider } from 'react-native-paper';
+import { Button, View, StyleSheet } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as Linking from 'expo-linking';
 import * as WebBrowser from 'expo-web-browser';
-import App from './src/App';
-import store from './src/store/reducer'
-
-
 import {
   AdMobBanner,
   AdMobInterstitial,
@@ -18,12 +14,7 @@ import {
   setTestDeviceIDAsync,
 } from 'expo-ads-admob';
 
-// --------------redux---------------
-import { Provider, connect } from 'react-redux';
-
-
-// -----------------------------
-
+import App from './src/App';
 import { setAndroidToken, getAndroidToken } from './src/api';
 
 Notifications.setNotificationHandler({
@@ -52,7 +43,6 @@ export default function Main() {
   const [showPreference, setShowPreference] = React.useState(false);
   const [langState, setLangState] = React.useState('');
   const [categoryState, setCategoryState] = React.useState('');
-  const [data, setData] = React.useState(null);
   const notificationListener = React.useRef();
   const responseListener = React.useRef();
 
@@ -76,26 +66,15 @@ export default function Main() {
   React.useEffect(async () => {
     await setTestDeviceIDAsync('EMULATOR');
   }, [])
-  const handleDeepLink = (e) => {
-    let data = Linking.parse(e.url)
-    console.log("data :", data)
-  }
-  React.useEffect(() => {
-    async function getInitialUrl() {
-      console.log('initial URL:')
-      const initialURL = await Linking.getInitialURL();
-      if (initialURL) setData(Linking.parse(initialURL))
-    }
 
-    Linking.addEventListener('url', handleDeepLink)
-    if (!data) {
-      getInitialUrl();
-    }
+  const _handleOpenWithLinking = () => {
+    Linking.openURL('https://docs.expo.io/');
+  };
 
-    return () => Linking.removeEventListener('url');
+  const _handleOpenWithWebBrowser = () => {
+    WebBrowser.openBrowserAsync('https://expo.dev');
+  };
 
-  }, [])
-  
   return (
     <PaperProvider theme={theme}>
       <AdMobBanner
@@ -105,11 +84,19 @@ export default function Main() {
         servePersonalizedAds // true or false
         onDidFailToReceiveAdWithError={this.bannerError} />
 
-      <Text>{data ? JSON.stringify(data) : 'app not open'}</Text>
-      <Provider store={store}>
-        <App source={data} />
-      </Provider>
+        <Button
+          title="Open URL with ReactNative.Linking"
+          onPress={()=>Linking.openURL('https://docs.expo.io/')}
+          style={styles.button}
+        />
+        <Button
+          title="Open URL with Expo.WebBrowser"
+          onPress={()=>WebBrowser.openBrowserAsync('https://docs.expo.io/')}
+          style={styles.button}
+        />
 
+
+      <App />
     </PaperProvider>
   );
 }
@@ -156,3 +143,16 @@ async function registerForPushNotificationsAsync() {
 
   return token;
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingTop: Constants.statusBarHeight,
+    backgroundColor: '#ecf0f1',
+  },
+  button: {
+    marginVertical: 10,
+  },
+});

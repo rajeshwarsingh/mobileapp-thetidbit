@@ -1,20 +1,28 @@
 import * as React from 'react';
 import { Avatar, Button, Card, Title, Paragraph,Headline } from 'react-native-paper';
+import * as Linking from 'expo-linking';
+import * as WebBrowser from 'expo-web-browser';
 // import Share from './share'
 import { Share } from 'react-native';
 
+import ExpoShareing from './share'
+
 const LeftContent = props => <Avatar.Icon {...props} icon="folder" />
 
-const MyComponent = ({newsItem,navigation}) => {
+const MyComponent = ({newsInx,newsItem,navigation}) => {
 
   const onShare = async () => {
     try {
       const result = await Share.share({
         message:
-          'React Native | A framework for building native apps using React',
+        `Please install this app and stay safe , AppLink : https://www.thetidbit.in/share?inx=${newsInx}`,
+        url:"https://blog.addthiscdn.com/wp-content/uploads/2015/11/share.png"
       });
+      console.log("*******************:",result.activityType , Share.sharedAction)
       if (result.action === Share.sharedAction) {
+        
         if (result.activityType) {
+
           // shared with activity type of result.activityType
         } else {
           // shared
@@ -40,9 +48,11 @@ const MyComponent = ({newsItem,navigation}) => {
     </Card.Content>
     
     <Card.Actions>
-    <Button onPress={() => navigation.navigate('Details',{ title:'blog1', link:newsItem.link})}>Read More ...</Button>
+    {/* <Button onPress={() => navigation.navigate('Details',{ title:'blog1', link:newsItem.link})}>Read More ...</Button> */}
+    <Button onPress={() => WebBrowser.openBrowserAsync(newsItem.link)}>Read More ...</Button>
       {/* <Button>Share</Button> */}
       <Button onPress={onShare} title="Share" >Share</Button>
+      {/* <ExpoShareing newsItem={newsItem}/> */}
     </Card.Actions>
   </Card>
 );

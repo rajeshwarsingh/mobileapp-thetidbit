@@ -3,7 +3,6 @@ import axios from "axios";
 import { Text, View } from 'react-native'
 import Swiper from 'react-native-swiper'
 import NewsCard from './NewsCard'
-import { useSelector } from 'react-redux'
 
 var styles = {
   wrapper: {},
@@ -36,11 +35,12 @@ var styles = {
   }
 }
 
-export default function NewsSlider({navigation}) {
+export default function NewsSlider({ navigation }) {
 
   const [news, setNews] = useState([])
-  const newsRedux = useSelector((state) => state.news)
+
   useEffect(async () => {
+
     let url = `https://thetidbit-mw.herokuapp.com/news/getCategoryNews`
 
     var options = {
@@ -62,15 +62,15 @@ export default function NewsSlider({navigation}) {
 
   const newsSlid = news.map((newsItem, i) => {
     return <View key={i} testID="Hello" style={styles.slide1}>
-      <Text style={styles.text}><NewsCard newsInx={i} navigation={navigation} newsItem={newsItem} /></Text>
+      <Text style={styles.text}><NewsCard navigation={navigation} newsItem={newsItem} /></Text>
     </View>
   })
 
   return (
     <View style={styles.container}>
-      {news.length>0 && <Swiper index={newsRedux.curNewsIndex} onIndexChanged={(i)=>console.log("check:",i)} showsPagination={false} horizontal={false} style={styles.wrapper} loop={false}>
+      <Swiper onIndexChanged={(i)=>console.log("@@@@@@@@@@@@@@@@@@",i)} index={2} showsPagination={false} horizontal={false} style={styles.wrapper} loop={false}>
         {newsSlid}
-      </Swiper>}
+      </Swiper>
     </View>
   )
 }
