@@ -2,7 +2,7 @@ import * as React from 'react';
 import { View, StyleSheet, Button,Dimensions } from 'react-native';
 import { Video, AVPlaybackStatus } from 'expo-av';
 
-const screenHeigh = Dimensions.get('window').height-100
+const screenHeigh = Dimensions.get('window').height
 
 export default function App({newsItem, curVidInx,vidInx}) {
   const video = React.useRef(null);

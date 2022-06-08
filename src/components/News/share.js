@@ -24,7 +24,6 @@ const options = {
         message:
         'Please install this app and stay safe , AppLink :https://play.google.com/store/search?q=thetidbit&c=apps&hl=en_IN&gl=US',
       });
-      console.log("*******************:",result.activityType , Share.sharedAction)
       if (result.action === Share.sharedAction) {
         
         if (result.activityType) {
@@ -51,7 +50,6 @@ export default class App extends React.Component {
           FileSystem.documentDirectory  + '.jpeg'
         )
           .then(({ uri }) => { 
-              console.log('Finished downloading to ', uri);
 
               Sharing.shareAsync(uri,options); 
           })

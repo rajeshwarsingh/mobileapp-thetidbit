@@ -1,7 +1,7 @@
 import Constants from 'expo-constants';
 import * as Notifications from 'expo-notifications';
 import * as React from 'react';
-import { Text } from 'react-native'
+import { Text, Dimensions } from 'react-native'
 import { DefaultTheme, Provider as PaperProvider } from 'react-native-paper';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as Linking from 'expo-linking';
@@ -64,7 +64,6 @@ export default function Main() {
     });
 
     responseListener.current = Notifications.addNotificationResponseReceivedListener(response => {
-      // console.log(response);
     });
 
     return () => {
@@ -78,11 +77,9 @@ export default function Main() {
   }, [])
   const handleDeepLink = (e) => {
     let data = Linking.parse(e.url)
-    console.log("data :", data)
   }
   React.useEffect(() => {
     async function getInitialUrl() {
-      console.log('initial URL:')
       const initialURL = await Linking.getInitialURL();
       if (initialURL) setData(Linking.parse(initialURL))
     }
@@ -95,10 +92,11 @@ export default function Main() {
     return () => Linking.removeEventListener('url');
 
   }, [])
-  
+
   return (
     <PaperProvider theme={theme}>
       <AdMobBanner
+      style={{width:Dimensions.get('window').width}}
         bannerSize="fullBanner"
         adUnitID="ca-app-pub-9155008277126927/7669993848" // prod
         // adUnitID="ca-app-pub-3940256099942544/6300978111" // Test ID

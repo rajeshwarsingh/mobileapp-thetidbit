@@ -1,9 +1,10 @@
 import * as React from 'react';
 import { Avatar, Button, Card, Title, Paragraph,Headline,Divider } from 'react-native-paper';
+import * as WebBrowser from 'expo-web-browser';
 
 const LeftContent = props => <Avatar.Icon {...props} icon="folder" />
 
-const MyComponent = ({newsItem,navigation}) => {
+const MyComponent = ({newsItem}) => {
 
   const getCategoryLinkName = (categoryLinkName)=>{
       let cat = ''
@@ -35,7 +36,7 @@ const MyComponent = ({newsItem,navigation}) => {
     </Card.Content>
     
      <Card.Actions>
-      <Button onPress={() => navigation.navigate('Details',{ title:'blog1', link:`https://www.thetidbit.in/${getCategoryLinkName(newsItem.category)}/${newsItem.title}` })}>Read More ...</Button>
+     <Button onPress={() => WebBrowser.openBrowserAsync(`https://www.thetidbit.in/${getCategoryLinkName(newsItem.category)}/${newsItem.title}`)}>Read More ...</Button>
     </Card.Actions> 
     <Divider />
   </Card>

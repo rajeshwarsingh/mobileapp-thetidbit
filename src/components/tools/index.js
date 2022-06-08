@@ -97,6 +97,7 @@ export default function App() {
 
 function HomeScreen({ navigation }) {
 
+  
   return (
     <SafeAreaView>
       <ScrollView style={styles.scrollView}>

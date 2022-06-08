@@ -9,9 +9,10 @@ const LeftContent = props => <Avatar.Icon {...props} icon="folder" />
 const MyComponent = ({newsItem,curVidInx,vidInx}) => {
 
   return (
-  <Card style={{width:screenWidth, height:screenHeigh}}>
-    <VidPlayer curVidInx={curVidInx} vidInx={vidInx} newsItem={newsItem} style={{ height:700}}/>
+    <Card style={{width:400, height:700}}>
+    
     <Card.Content>
+    <VidPlayer curVidInx={curVidInx} vidInx={vidInx} newsItem={newsItem} />
       <Title><Headline style={{fontWeight: "bold" }}>{newsItem.name}</Headline></Title>
     </Card.Content>
   </Card>

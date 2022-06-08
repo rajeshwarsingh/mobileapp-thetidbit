@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { AppRegistry, StyleSheet, Text, View } from 'react-native';
 import axios from "axios";
 import Swiper from 'react-native-swiper';
+import { useSelector } from 'react-redux'
 import NewsCard from './NewsCard';
 
 const styles = StyleSheet.create({
@@ -36,14 +37,17 @@ export default function SwiperComponent({ news = [] }) {
 
   const [indexChanged, setIndexChanged] = useState(0)
   const [swiperIndex, setSwiperIndex] = useState([])
+  const curTab = useSelector((state) => state.news.curTab)
 
   const newsSlid = news.map((newsItem, i) => {
     return <View key={i} testID="Hello" style={styles.slide1}>
       <Text style={styles.text}>
-        <NewsCard curVidInx={indexChanged} vidInx={i} newsItem={newsItem} />
+        <NewsCard curVidInx={indexChanged} vidInx={curTab===1?i:-1} newsItem={newsItem} />
       </Text>
     </View>
   })
+
+  
 
   return (
     <View style={{ flex: 1 }}>

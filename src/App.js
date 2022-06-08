@@ -1,28 +1,49 @@
 import * as React from 'react';
 import { BottomNavigation, Text } from 'react-native-paper';
 import {  connect } from 'react-redux';
-import { bindActionCreators } from 'redux'
-
+import { useDispatch } from 'react-redux'
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import NewsRoute from './components/News'
 import VideosRoute from './components/videos'
 import BlogsRoute from './components/blogs'
-import ToolsRoute from './components/tools' 
-import setCurNewsIndex from '../src/store/action/action'
-import { useDispatch } from 'react-redux'
+import ToolsRoute from './components/tools'
+import PreferenceComponent from './components/PreferenceComponent'
 
 const MyComponent = (props) => {
+  const [showPreference, setShowPreference] = React.useState(false);
+  const [langState, setLangState] = React.useState('');
+
   const dispatch = useDispatch()
 
-  console.log(dispatch)
+  const getData = async () => {
+
+    try {
+      // CHECK STORED PREFERENCE
+      let prefData = await AsyncStorage.getItem('peference')
+
+      prefData = prefData ? JSON.parse(prefData) : ''
+
+      if (prefData && prefData.language) {
+        dispatch({ type: 'set-cur-pref-lang', curPrefLang:prefData.language })
+      } else {
+        setShowPreference(true)
+      }
+
+    } catch (e) {
+      console.log('Error in getdata component didmount :', e)
+      setCategoryState('general')
+    }
+  }
+  React.useEffect(()=>{
+    getData()
+  },[])
+
   React.useEffect(()=>{
     if(props.source && props.source.queryParams){
-      
-      let newsInx = props.source.queryParams.newsinx?props.source.queryParams.newsinx:0
+      let newsInx = props.source.queryParams.newsInx?props.source.queryParams.newsInx:0
+       newsInx = parseInt(newsInx)
       dispatch({ type: 'set-cur-news-tab', curNewsIndex:newsInx })
     }
-    
-    // setCurNewsIndex(1)
-    // setIndex(0)
   },[])
 
   const [index, setIndex] = React.useState(0);
@@ -40,31 +61,42 @@ const MyComponent = (props) => {
     tools: ToolsRoute,
   });
 
+  const setPreferenceComponentCall = async (preference) => {
+
+    try {
+      if (preference.language) {
+        await AsyncStorage.setItem('peference', JSON.stringify({ language: preference.language }));
+        dispatch({ type: 'set-cur-pref-lang', curPrefLang:preference.language }) 
+      } else {
+        setLangState('en')
+      }
+    } catch (error) {
+      // Error saving data
+      console.log('Error app setPreference**********:', error)
+      setLangState('en')
+    }
+
+    setShowPreference(false)
+  }
+
   return (
-    <BottomNavigation
+    <>
+    {showPreference && <PreferenceComponent setPreference={setPreferenceComponentCall} />}
+    {!showPreference &&<BottomNavigation
       navigationState={{ index, routes }}
-      onIndexChange={setIndex}
+      onIndexChange={(i)=>{
+        setIndex(i);
+        dispatch({ type: 'set-cur-tab', curTab:i });
+
+      }}
       renderScene={renderScene}
       shifting={false}
       news={'one'}
-    />
+    />}
+    
+    
+    </>
   );
 };
 
-// let StaticCounterContainer = connect(state => ({ count: state.count }))(
-//   StaticCounter
-// );
-
-function mapStateToProps(state) {
-  console.log("state@@@@@@@@@@@",state)
-  return { }
-}
-
-// const mapDispatchToProps = (dispatch) => {
-//   return {
-//     setCurNewsIndex: (curNewsIndex) => dispatch(setCurNewsIndex(curNewsIndex))
-//   }
-// }
-
-export default connect(mapStateToProps,null)(MyComponent)
-// export default MyComponent;
+export default connect(null,null)(MyComponent)
