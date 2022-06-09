@@ -44,3 +44,11 @@ How to implement deep linking in React Native with React Navigation v5 in 2021
 
 https://www.youtube.com/watch?v=s8YaclRknYw
 
+
+-------------------------------------------------------
+## Open Mobile Application From The Browser
+https://vhudyma-blog.eu/open-mobile-application-from-the-browser/
+
+https://docs.expo.dev/guides/linking/#deep-links-on-android
+
+

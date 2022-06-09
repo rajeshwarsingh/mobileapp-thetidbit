@@ -15,7 +15,7 @@ const MyComponent = ({newsInx,newsItem,navigation}) => {
     try {
       const result = await Share.share({
         message:
-        `Please install this app and stay safe , AppLink : https://www.thetidbit.in/share?newsInx=${newsInx}`,
+        `Please install this app and stay safe , AppLink : https://www.thetidbit.in/sharenews?newsInx=${newsInx}`,
         url:"https://blog.addthiscdn.com/wp-content/uploads/2015/11/share.png"
       });
       if (result.action === Share.sharedAction) {

@@ -95,13 +95,13 @@ export default function Main() {
 
   return (
     <PaperProvider theme={theme}>
-      <AdMobBanner
+      {/* <AdMobBanner
       style={{width:Dimensions.get('window').width}}
         bannerSize="fullBanner"
         adUnitID="ca-app-pub-9155008277126927/7669993848" // prod
         // adUnitID="ca-app-pub-3940256099942544/6300978111" // Test ID
         servePersonalizedAds // true or false
-        onDidFailToReceiveAdWithError={this.bannerError} />
+        onDidFailToReceiveAdWithError={this.bannerError} /> */}
 
       <Text>{data ? JSON.stringify(data) : 'app not open'}</Text>
       <Provider store={store}>

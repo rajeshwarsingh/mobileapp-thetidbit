@@ -49,17 +49,7 @@
           "data": [
             {
               "scheme": "https",
-              "host": "blogs.thetidbit.in",
-              "pathPrefix": "/"
-            },
-            {
-              "scheme": "https",
               "host": "thetidbit.in",
-              "pathPrefix": "/"
-            },
-            {
-              "scheme": "https",
-              "host": "*.thetidbit.in",
               "pathPrefix": "/"
             },
             {
