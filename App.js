@@ -3,29 +3,25 @@ import * as Notifications from 'expo-notifications';
 import * as React from 'react';
 import { Text, Dimensions } from 'react-native'
 import { DefaultTheme, Provider as PaperProvider } from 'react-native-paper';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as Linking from 'expo-linking';
-import * as WebBrowser from 'expo-web-browser';
+import AdMobComponent from './src/components/AdMobComponent';
 import App from './src/App';
 import store from './src/store/reducer'
+import ShowRating from './src/components/Rating'
+import INApp from './src/components/InAppUpdate'
 
+const experienceId = Constants.manifest.id; // @user/project-slug
 
-import {
-  AdMobBanner,
-  AdMobInterstitial,
-  PublisherBanner,
-  AdMobRewarded,
-  setTestDeviceIDAsync,
-} from 'expo-ads-admob';
+console.log("experienceId:", experienceId)
 
 // --------------redux---------------
-import { Provider, connect } from 'react-redux';
-
-
+import { Provider } from 'react-redux';
 // -----------------------------
 
 import { setAndroidToken, getAndroidToken } from './src/api';
+import { View } from 'react-native-web';
 
+let notiData = {}
 Notifications.setNotificationHandler({
   handleNotification: async () => ({
     shouldShowAlert: true,
@@ -34,36 +30,62 @@ Notifications.setNotificationHandler({
   }),
 });
 
+Notifications.addNotificationResponseReceivedListener((response) => {
+  notiData = response.notification
+});
+
 const theme = {
   ...DefaultTheme,
   colors: {
     ...DefaultTheme.colors,
     primary: '#1976D2',
-    accent: 'yellow',
+    accent: '#000000',
   },
 };
 
 export default function Main() {
 
   const [expoPushToken, setExpoPushToken] = React.useState('');
-  const [notification, setNotification] = React.useState(false);
-  const [refComponent, setRefComponent] = React.useState(false);
-  const [exitPressTime, setExitPressTime] = React.useState('');
-  const [showPreference, setShowPreference] = React.useState(false);
-  const [langState, setLangState] = React.useState('');
-  const [categoryState, setCategoryState] = React.useState('');
+  const [notification, setNotification] = React.useState({});
   const [data, setData] = React.useState(null);
   const notificationListener = React.useRef();
   const responseListener = React.useRef();
+  const lastNotificationResponse = Notifications.useLastNotificationResponse();
+
+  // React.useEffect(() => {
+    // alert(getVersion())
+    // getToken()
+    // notificationsListner((err, data) => {
+    //   setData({
+    //     queryParams: data
+    //   })
+    // })
+  // }, [])
+
+  React.useEffect(() => {
+    if (
+      lastNotificationResponse &&
+      lastNotificationResponse.notification.request.content.data['newsInxShow'] &&
+      lastNotificationResponse.actionIdentifier === Notifications.DEFAULT_ACTION_IDENTIFIER
+    ) {
+      // navigate to your desired screen
+      // console.log('Lastlistner :',lastNotificationResponse.notification)
+      setNotification(lastNotificationResponse.notification);
+    }
+  }, [lastNotificationResponse]);
+
 
   React.useEffect(() => {
     registerForPushNotificationsAsync().then(token => setExpoPushToken(token));
 
     notificationListener.current = Notifications.addNotificationReceivedListener(notification => {
+      // console.log("@@@@@@@@@@@@@@@@@",notification)
       setNotification(notification);
     });
 
     responseListener.current = Notifications.addNotificationResponseReceivedListener(response => {
+      // console.log("**********************",response.notification)
+      setNotification(response.notification);
     });
 
     return () => {
@@ -72,16 +94,18 @@ export default function Main() {
     };
   }, []);
 
-  React.useEffect(async () => {
-    await setTestDeviceIDAsync('EMULATOR');
-  }, [])
   const handleDeepLink = (e) => {
     let data = Linking.parse(e.url)
+    console.log("handleDeepLink:", data)
+    setData(data)
+
   }
+
   React.useEffect(() => {
     async function getInitialUrl() {
       const initialURL = await Linking.getInitialURL();
       if (initialURL) setData(Linking.parse(initialURL))
+      console.log("App useEffect:", initialURL)
     }
 
     Linking.addEventListener('url', handleDeepLink)
@@ -93,34 +117,61 @@ export default function Main() {
 
   }, [])
 
+
+
+
+  // let title = ''
+  // let body = ''
+  // let DataNoti = {}
+  // if (notification && notification.request && notification.request.content) {
+  //   title = notification.request.content.title ? notification.request.content.title : ""
+  //   body = notification.request.content.body ? notification.request.content.body : ""
+  //   DataNoti = notification.request.content.data ? notification.request.content.data : {}
+  // }
+
+
+  let sourceData = {
+    queryParams: {
+      newsInx: 0,
+      newsInxShow: false
+    }
+  }
+
+  if (data && data.queryParams && data.queryParams.newsInxShow) {
+    sourceData = data;
+  }
+
+  if ((notiData && notiData.request && notiData.request.content && notiData.request.content.data && notiData.request.content.data) || (notification && notification.request && notification.request.content && notification.request.content.data && notification.request.content.data)) {
+    if (typeof notification.request.content.data === 'string' && notification.request.content.data.newsInx) {
+      notification.request.content.data = JSON.parse(notification.request.content.data)
+    }
+    sourceData = {
+      queryParams: {
+        newsInx: notification.request.content.data.newsInx,
+        newsInxShow: notification.request.content.data.newsInxShow
+      }
+    }
+  }
+
+  // sourceData = {
+  //   queryParams: {
+  //     curTab:1,
+  //     blogInx:4,
+  //     newsInxShow: true
+  //   }
+  // }
+
   return (
     <PaperProvider theme={theme}>
-      {/* <AdMobBanner
-      style={{width:Dimensions.get('window').width}}
-        bannerSize="fullBanner"
-        adUnitID="ca-app-pub-9155008277126927/7669993848" // prod
-        // adUnitID="ca-app-pub-3940256099942544/6300978111" // Test ID
-        servePersonalizedAds // true or false
-        onDidFailToReceiveAdWithError={this.bannerError} /> */}
-
-      <Text>{data ? JSON.stringify(data) : 'app not open'}</Text>
+      <AdMobComponent/>
+      <INApp />
+      <ShowRating/>
       <Provider store={store}>
-        <App source={data} />
+        {sourceData.queryParams.newsInxShow && <App source={sourceData} />}
+        {!sourceData.queryParams.newsInxShow && <App source={sourceData} />}
       </Provider>
-
     </PaperProvider>
   );
-}
-
-async function schedulePushNotification() {
-  await Notifications.scheduleNotificationAsync({
-    content: {
-      title: "You've got mail! 📬",
-      body: 'Here is the notification body',
-      data: { data: 'goes here' },
-    },
-    trigger: { seconds: 2 },
-  });
 }
 
 async function registerForPushNotificationsAsync() {
@@ -137,6 +188,7 @@ async function registerForPushNotificationsAsync() {
       return;
     }
     token = (await Notifications.getDevicePushTokenAsync()).data;
+    // token = (await Notifications.getExpoPushTokenAsync()).data;
     await setAndroidToken(token)
     console.log(token);
   } else {

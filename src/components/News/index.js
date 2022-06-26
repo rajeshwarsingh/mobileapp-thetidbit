@@ -3,9 +3,8 @@ import React from 'react';
 import { View } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
-import { Appbar, Menu } from 'react-native-paper';
+import { Appbar } from 'react-native-paper';
 import NewsSLider from './NewsSlider'
-import Browser from './Browser';
 const Stack = createStackNavigator();
 
 function CustomNavigationBar({ navigation, back }) {
@@ -27,7 +26,6 @@ export default function App() {
           header: (props) => <CustomNavigationBar {...props} />,
         }}>
         <Stack.Screen name="Home" component={HomeScreen} />
-        <Stack.Screen name="Details" component={Browser} />
       </Stack.Navigator>
     </NavigationContainer>
   );

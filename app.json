@@ -8,9 +8,10 @@
     "scheme": "thetidbit",
     "name": "thetidbit",
     "slug": "mobileapp-thetidbit",
-    "version": "3.0.24",
+    "version": "3.0.59",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
+    "userInterfaceStyle": "automatic",
     "plugins": [
       [
         "expo-notifications",
@@ -42,6 +43,7 @@
     },
     "android": {
       "package": "com.mobileappthetidbit",
+      "userInterfaceStyle": "dark",
       "intentFilters": [
         {
           "action": "VIEW",
@@ -62,7 +64,7 @@
           ]
         }
       ],
-      "versionCode": 27,
+      "versionCode": 62,
       "googleServicesFile": "./google-services.json",
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",

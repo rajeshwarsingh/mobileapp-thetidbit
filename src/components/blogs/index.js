@@ -1,22 +1,17 @@
 import 'react-native-gesture-handler';
-import React from 'react';
-import { View, Text, Button, StyleSheet } from 'react-native';
+import React, { useState,useEffect } from 'react';
+import { View } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
-import { Appbar, Menu } from 'react-native-paper';
-import { WebView } from 'react-native-webview'
-import NewsSLider from './NewsSlider'
-import Browser from './Browser';
+import { Appbar } from 'react-native-paper';
+import BlogSlider from './BlogSlider'
 
 const Stack = createStackNavigator();
 
 function CustomNavigationBar({ navigation, back }) {
-  const [visible, setVisible] = React.useState(false);
-  const openMenu = () => setVisible(true);
-  const closeMenu = () => setVisible(false);
 
   return (
-    <Appbar.Header style={{height:0}}>
+    <Appbar.Header style={{ height: 0 }}>
       {back ? <Appbar.BackAction onPress={navigation.goBack} /> : null}
       <Appbar.Content title="Blogs" />
     </Appbar.Header>
@@ -32,15 +27,29 @@ export default function App() {
           header: (props) => <CustomNavigationBar {...props} />,
         }}>
         <Stack.Screen name="Home" component={HomeScreen} />
-        <Stack.Screen name="Details" component={Browser} />
       </Stack.Navigator>
     </NavigationContainer>
   );
 }
 
 function HomeScreen({ navigation }) {
+  const [blog, setBlogs] = useState([]);
+
+  useEffect(async () => {
+
+    let url = `https://thetidbit-mw.herokuapp.com/blogs/getFeaturedBlogs`
+
+    try {
+      const res = await fetch(url)
+      const data = await res.json()
+      setBlogs(data.blogs)
+    } catch (e) {
+      console.log("error in newsslide:", e)
+    }
+  }, [])
+
   return (<View style={{ flex: 1 }}>
-    <NewsSLider navigation={navigation} />
+    <BlogSlider DATA={blog} navigation={navigation} />
   </View>
   );
 }

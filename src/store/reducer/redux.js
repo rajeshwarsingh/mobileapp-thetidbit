@@ -5,15 +5,20 @@
 import { newsActionTypes } from '../action/action'
 const newsInitialState = {
     curNewsIndex:0,
-    curPrefLang:'en',
-    curTab:0
+    curPrefLang:'en1',
+    curTab:0,
+    curVidIndex:0,
+    curBlogIndex:0
 }
-
 export default function getCurNews(state = newsInitialState, action) {
 
     switch (action.type) {
     case newsActionTypes.SETCURNEWSINDEX:
       return {...state, curNewsIndex: action.curNewsIndex};
+    case newsActionTypes.SETCURVIDINDEX:
+      return {...state, curVidIndex: action.curVidIndex};
+    case newsActionTypes.SETCURBLOGINDEX:
+      return {...state, curBlogIndex: action.curBlogIndex};
     case newsActionTypes.SETCURPREFLANG:
       return {...state, curPrefLang: action.curPrefLang};
     case newsActionTypes.SETCURTAB:
